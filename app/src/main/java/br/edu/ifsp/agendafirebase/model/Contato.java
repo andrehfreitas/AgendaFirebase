@@ -1,9 +1,6 @@
 package br.edu.ifsp.agendafirebase.model;
 
-
-
 public class Contato  {
-
 
     private String nome;
     private String fone;
@@ -17,7 +14,6 @@ public class Contato  {
         this.fone = fone;
         this.email = email;
     }
-
 
     public String getNome() {
         return nome;

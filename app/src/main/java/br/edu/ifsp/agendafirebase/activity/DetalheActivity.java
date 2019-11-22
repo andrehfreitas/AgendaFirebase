@@ -1,12 +1,19 @@
 package br.edu.ifsp.agendafirebase.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import br.edu.ifsp.agendafirebase.R;
 import br.edu.ifsp.agendafirebase.model.Contato;
@@ -15,38 +22,43 @@ public class DetalheActivity extends AppCompatActivity {
 
     Contato c;
     String ContatoID;
+    DatabaseReference databaseReference;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detalhe);
 
-        if (getIntent().hasExtra("contato"))
-        {
+        databaseReference = FirebaseDatabase.getInstance().getReference();
 
+        if (getIntent().hasExtra("contato")){
             ContatoID = getIntent().getStringExtra("contato");
 
-
-
             // Código para buscar o Contato no Firebase pelo ID
+            databaseReference.child(ContatoID).addValueEventListener(new ValueEventListener() {
+                @Override
+                public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                    c = dataSnapshot.getValue(Contato.class);
 
+                    if (c != null) {
+                        EditText nome = findViewById(R.id.editTextNome);
+                        nome.setText(c.getNome());
 
+                        EditText fone = findViewById(R.id.editTextFone);
+                        fone.setText(c.getFone());
 
-            EditText nome = findViewById(R.id.editTextNome);
-            nome.setText(c.getNome());
+                        EditText email = findViewById(R.id.editTextEmail);
+                        email.setText(c.getEmail());
+                    }
+                }
 
-            EditText fone = findViewById(R.id.editTextFone);
-            fone.setText(c.getFone());
+                @Override
+                public void onCancelled(@NonNull DatabaseError databaseError) {
 
-            EditText email = findViewById(R.id.editTextEmail);
-            email.setText(c.getEmail());
-
+                }
+            });
         }
-
-
-
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -65,7 +77,6 @@ public class DetalheActivity extends AppCompatActivity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_alterarContato) {
 
-
             String nome = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
             String fone = ((EditText) findViewById(R.id.editTextFone)).getText().toString();
             String email = ((EditText) findViewById(R.id.editTextEmail)).getText().toString();
@@ -75,6 +86,7 @@ public class DetalheActivity extends AppCompatActivity {
             c.setEmail(email);
 
             // Código para alterar informações do contato
+            databaseReference.child(ContatoID).setValue(c);
 
             Toast.makeText(getApplicationContext(),"Contato alterado",Toast.LENGTH_LONG).show();
 
@@ -84,12 +96,11 @@ public class DetalheActivity extends AppCompatActivity {
         if (id ==R.id.action_excluirContato) {
 
             // Código para excluir o contato
+            databaseReference.child(ContatoID).removeValue();
 
             Toast.makeText(getApplicationContext(),"Contato excluído",Toast.LENGTH_LONG).show();
             finish();
-
         }
-
 
         return super.onOptionsItemSelected(item);
     }

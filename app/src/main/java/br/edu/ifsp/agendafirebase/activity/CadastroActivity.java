@@ -1,12 +1,15 @@
 package br.edu.ifsp.agendafirebase.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 import br.edu.ifsp.agendafirebase.R;
 import br.edu.ifsp.agendafirebase.model.Contato;
@@ -31,7 +34,6 @@ public class CadastroActivity extends AppCompatActivity {
 
         int id = item.getItemId();
 
-
         if (id == R.id.action_salvarContato) {
 
             String nome = ((EditText) findViewById(R.id.editTextNome)).getText().toString();
@@ -41,18 +43,13 @@ public class CadastroActivity extends AppCompatActivity {
             Contato c = new Contato(nome,fone, email);
 
             // Código para gravar contato no Firebase
-
+            DatabaseReference databaseReference = FirebaseDatabase.getInstance().getReference();
+            databaseReference.push().setValue(c);
 
             Toast.makeText(getApplicationContext(),"Contato inserido",Toast.LENGTH_LONG).show();
 
             finish();
-
-
         }
-
         return super.onOptionsItemSelected(item);
     }
-
-
-
 }
