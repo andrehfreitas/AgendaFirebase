@@ -18,7 +18,7 @@ public class ContatoAdapter extends FirebaseRecyclerAdapter<Contato, ContatoAdap
 
     private static ItemClickListener clickListener;
 
-    /**
+    /*
      * Initialize a {@link RecyclerView.Adapter} that listens to a Firebase query. See
      * {@link FirebaseRecyclerOptions} for configuration options.
      *
@@ -44,14 +44,14 @@ public class ContatoAdapter extends FirebaseRecyclerAdapter<Contato, ContatoAdap
         return new ContatoViewHolder(view);
     }
 
-    public class ContatoViewHolder
+    public static class ContatoViewHolder
             extends RecyclerView.ViewHolder
             implements View.OnClickListener{
         final TextView nome;
 
-        public ContatoViewHolder(@NonNull View itemView) {
+        ContatoViewHolder(@NonNull View itemView) {
             super(itemView);
-            nome = (TextView) itemView.findViewById(R.id.nome);
+            nome = itemView.findViewById(R.id.nome);
             itemView.setOnClickListener(this);
         }
 

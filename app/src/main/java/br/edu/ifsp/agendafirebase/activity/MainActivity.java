@@ -29,6 +29,8 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.Query;
 
+import java.util.Objects;
+
 import br.edu.ifsp.agendafirebase.R;
 import br.edu.ifsp.agendafirebase.data.ContatoAdapter;
 import br.edu.ifsp.agendafirebase.model.Contato;
@@ -85,13 +87,13 @@ public class MainActivity extends AppCompatActivity {
 
                   // Código para excluir o contato usando swipe
                 int position = viewHolder.getAdapterPosition();
-                databaseReference.child(adapter.getRef(position).getKey()).removeValue();
+                databaseReference.child(Objects.requireNonNull(adapter.getRef(position).getKey())).removeValue();
 
                 Toast.makeText(getApplicationContext(),"Contato apagado", Toast.LENGTH_LONG).show();
             }
 
             @Override
-            public void onChildDraw(Canvas c, RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
+            public void onChildDraw(Canvas c, @NonNull RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder,
                                     float dX, float dY, int actionState, boolean isCurrentlyActive){
                 Bitmap icon;
                 Paint p = new Paint();
@@ -138,6 +140,7 @@ public class MainActivity extends AppCompatActivity {
         SearchManager searchManager = (SearchManager) getSystemService(Context.SEARCH_SERVICE);
 
         searchView = (SearchView) menu.findItem(R.id.action_search).getActionView();
+        assert searchManager != null;
         searchView.setSearchableInfo(searchManager.getSearchableInfo(getComponentName()));
         searchView.setMaxWidth(Integer.MAX_VALUE);
 
@@ -164,7 +167,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
         return super.onOptionsItemSelected(item);
     }
 }

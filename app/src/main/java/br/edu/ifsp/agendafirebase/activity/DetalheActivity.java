@@ -35,6 +35,7 @@ public class DetalheActivity extends AppCompatActivity {
             ContatoID = getIntent().getStringExtra("contato");
 
             // Código para buscar o Contato no Firebase pelo ID
+            assert ContatoID != null;
             databaseReference.child(ContatoID).addValueEventListener(new ValueEventListener() {
                 @Override
                 public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
